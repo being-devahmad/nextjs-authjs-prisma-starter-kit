@@ -1,6 +1,12 @@
 import { SignOut } from "@/components/buttons/sign-out";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-const Page = async () => {
+const HomePage = async () => {
+
+  const session = await auth()
+  if (!session) redirect('/sign-in')
+
   return (
     <>
       <div className="bg-gray-100 rounded-lg p-4 text-center mb-6">
@@ -13,4 +19,4 @@ const Page = async () => {
   );
 };
 
-export default Page;
+export default HomePage;
