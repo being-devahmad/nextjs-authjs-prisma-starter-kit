@@ -1,9 +1,15 @@
+import { signup } from "@/actions/signup";
 import { GithubSignIn } from "@/components/buttons/github-sign-in";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { auth } from "@/lib/auth";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const Page = async () => {
+  const session = await auth()
+  if (session) redirect('/')
+
   return (
     <div className="w-full max-w-sm mx-auto space-y-6">
       <h1 className="text-2xl font-bold text-center mb-6">Create Account</h1>
@@ -24,9 +30,13 @@ const Page = async () => {
       {/* Email/Password Sign Up */}
       <form
         className="space-y-4"
-        action={async () => {
+        action={async (formData: FormData) => {
           "use server";
-          
+          const response = await signup(formData);
+          console.log("response--->", response)
+          if (response.success) {
+            redirect('/sign-in')
+          }
         }}
       >
         <Input
@@ -53,7 +63,7 @@ const Page = async () => {
           <Link href="/sign-in">Already have an account? Sign in</Link>
         </Button>
       </div>
-    </div>
+    </div >
   );
 };
 
